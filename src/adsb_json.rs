@@ -81,10 +81,12 @@ pub struct ADSBJsonMessage {
     pub version: Option<i32>, // version
     #[serde(skip_serializing_if = "Option::is_none")]
     pub nic_baro: Option<i8>, // Navigation Integrity Category for Barometric Altitude (2.2.5.1.35)
-    pub nac_p: i8, // Navigation Accuracy Category for Position
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub nac_p: Option<i8>, // Navigation Accuracy Category for Position
     #[serde(skip_serializing_if = "Option::is_none")]
     pub nac_v: Option<i8>, // Navigation Accuracy Category for Velocity
-    pub sil: i8,   // Source Integrity Level
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub sil: Option<i8>, // Source Integrity Level
     pub sil_type: SilType, // Source Integrity Level for Type of Aircraft
     #[serde(skip_serializing_if = "Option::is_none")]
     pub gva: Option<i8>, // Geometric Vertical Accuracy
@@ -96,7 +98,7 @@ pub struct ADSBJsonMessage {
     pub spi: Option<i8>, // Flight status special position identification bit (2.2.3.2.3.2)
     pub mlat: Vec<String>, // MLAT
     pub tisb: Vec<String>, // TIS-B
-    pub messages: i32, // number of messages
+    pub messages: i32,     // number of messages
     pub rssi: f32,
     #[serde(skip_serializing_if = "Option::is_none", rename = "dbFlags")]
     pub dbflags: Option<i32>,
@@ -126,6 +128,8 @@ pub enum NavModes {
     AutoPilot,
     #[serde(rename = "vnav")]
     VNAV,
+    #[serde(rename = "lnav")]
+    LNAV,
     #[serde(rename = "tcas")]
     TCAS,
 }
