@@ -37,15 +37,15 @@ impl DecodeMessage for str {
         serde_json::from_str(self)
     }
 }
-/// Implementation of `AcarsVdlm2Message`.
+/// Implementation of `ADSBMessage`.
 impl ADSBMessage {
-    /// Converts `AcarsVdlm2Message` to `String`.
+    /// Converts `ADSBMessage` to `String`.
     pub fn to_string(&self) -> MessageResult<String> {
         trace!("Converting {:?} to a string", &self);
         serde_json::to_string(self)
     }
 
-    /// Converts `AcarsVdlm2Message` to `String` and appends a `\n` to the end.
+    /// Converts `ADSBMessage` to `String` and appends a `\n` to the end.
     pub fn to_string_newline(&self) -> MessageResult<String> {
         trace!("Converting {:?} to a string and appending a newline", &self);
         match serde_json::to_string(self) {
@@ -54,7 +54,7 @@ impl ADSBMessage {
         }
     }
 
-    /// Converts `AcarsVdlm2Message` to a `String` encoded as bytes.
+    /// Converts `ADSBMessage` to a `String` encoded as bytes.
     ///
     /// The output is returned as a `Vec<u8>`.
     pub fn to_bytes(&self) -> MessageResult<Vec<u8>> {
@@ -65,7 +65,7 @@ impl ADSBMessage {
         }
     }
 
-    /// Converts `AcarsVdlm2Message` to a `String` terminated with a `\n` and encoded as bytes.
+    /// Converts `ADSBMessage` to a `String` terminated with a `\n` and encoded as bytes.
     ///
     /// The output is returned as a `Vec<u8>`.
     pub fn to_bytes_newline(&self) -> MessageResult<Vec<u8>> {

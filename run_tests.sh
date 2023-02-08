@@ -1,4 +1,4 @@
-# /bin/sh
+#! /bin/sh
 
 echo "Running all except ignored tests."
 echo "Ignored tests are for showing parsing error messages."

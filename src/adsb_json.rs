@@ -77,13 +77,14 @@ pub struct ADSBJsonMessage {
     pub seen: f64, // how long ago (in seconds before "now") the message was last received
     pub r_dst: f32, // distance from receiver
     pub r_dir: f32,
-    pub version: i32, // version
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub version: Option<i32>, // version
     #[serde(skip_serializing_if = "Option::is_none")]
     pub nic_baro: Option<i8>, // Navigation Integrity Category for Barometric Altitude (2.2.5.1.35)
-    pub nac_p: i8,    // Navigation Accuracy Category for Position
+    pub nac_p: i8, // Navigation Accuracy Category for Position
     #[serde(skip_serializing_if = "Option::is_none")]
     pub nac_v: Option<i8>, // Navigation Accuracy Category for Velocity
-    pub sil: i8,      // Source Integrity Level
+    pub sil: i8,   // Source Integrity Level
     pub sil_type: SilType, // Source Integrity Level for Type of Aircraft
     #[serde(skip_serializing_if = "Option::is_none")]
     pub gva: Option<i8>, // Geometric Vertical Accuracy
