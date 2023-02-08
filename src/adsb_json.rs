@@ -41,10 +41,13 @@ pub struct ADSBJsonMessage {
     pub aircraft_registration: String, // registration
     #[serde(skip_serializing_if = "Option::is_none", rename = "t")]
     pub aircraft_type: Option<String>,
-    pub alt_baro: i32, // altitude
-    pub alt_geom: i32, // altitude
-    pub gs: f32,       // ground speed
-    pub track: f32,    // track
+    pub alt_baro: Altitude, // altitude
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub alt_geom: Option<i32>, // altitude
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub gs: Option<f32>, // ground speed
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub track: Option<f32>, // track
     #[serde(skip_serializing_if = "Option::is_none")]
     pub baro_rate: Option<i32>, // vertical rate
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -53,13 +56,16 @@ pub struct ADSBJsonMessage {
     pub squawk: Option<String>, // squawk
     #[serde(skip_serializing_if = "Option::is_none")]
     pub emergency: Option<String>, // emergency
-    pub category: String, // category
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub category: Option<String>, // category
     #[serde(skip_serializing_if = "Option::is_none")]
     pub nav_qnh: Option<f32>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub nav_altitude_mcp: Option<i32>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub nav_heading: Option<f32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub true_heading: Option<f32>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub nav_modes: Option<Vec<NavModes>>,
     pub lat: f32, // latitude
@@ -71,24 +77,44 @@ pub struct ADSBJsonMessage {
     pub seen: f64, // how long ago (in seconds before "now") the message was last received
     pub r_dst: f32, // distance from receiver
     pub r_dir: f32,
-    pub version: i32,      // version
-    pub nic_baro: i8,      // Navigation Integrity Category for Barometric Altitude (2.2.5.1.35)
-    pub nac_p: i8,         // Navigation Accuracy Category for Position
-    pub nac_v: i8,         // Navigation Accuracy Category for Velocity
-    pub sil: i8,           // Source Integrity Level
+    pub version: i32, // version
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub nic_baro: Option<i8>, // Navigation Integrity Category for Barometric Altitude (2.2.5.1.35)
+    pub nac_p: i8,    // Navigation Accuracy Category for Position
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub nac_v: Option<i8>, // Navigation Accuracy Category for Velocity
+    pub sil: i8,      // Source Integrity Level
     pub sil_type: SilType, // Source Integrity Level for Type of Aircraft
     #[serde(skip_serializing_if = "Option::is_none")]
     pub gva: Option<i8>, // Geometric Vertical Accuracy
     #[serde(skip_serializing_if = "Option::is_none")]
     pub sda: Option<i8>, // System Design Assurance (2.2.3.2.7.2.4.6)
-    pub alert: i8,         // Alert
-    pub spi: i8,           // Flight status special position identification bit (2.2.3.2.3.2)
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub alert: Option<i8>, // Alert
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub spi: Option<i8>, // Flight status special position identification bit (2.2.3.2.3.2)
     pub mlat: Vec<String>, // MLAT
     pub tisb: Vec<String>, // TIS-B
-    pub messages: i32,     // number of messages
+    pub messages: i32, // number of messages
     pub rssi: f32,
     #[serde(skip_serializing_if = "Option::is_none", rename = "dbFlags")]
     pub dbflags: Option<i32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub calc_track: Option<i32>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(untagged)]
+pub enum Altitude {
+    I32(i32),
+    #[serde(rename = "ground")]
+    Ground(String),
+}
+
+impl Default for Altitude {
+    fn default() -> Self {
+        Altitude::I32(0)
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -107,12 +133,13 @@ pub enum NavModes {
 pub enum SilType {
     #[serde(rename = "perhour")]
     PerHour,
+    #[serde(rename = "unknown")]
+    Unknown,
 }
 
 impl Default for SilType {
-    // TODO: Do this better....
     fn default() -> Self {
-        SilType::PerHour
+        SilType::Unknown
     }
 }
 
