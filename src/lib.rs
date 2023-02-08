@@ -80,7 +80,7 @@ impl ADSBMessage {
     }
 }
 
-/// This will automagically serialise to either a `Vdlm2Message` or `AcarsMessage`.
+/// This will automagically serialise JSON or (TODO: BEAST).
 ///
 /// This simplifies the handling of messaging by not needing to identify it first.
 /// It handles identification by looking at the provided data and seeing which format matches it best.
